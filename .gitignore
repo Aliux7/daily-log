@@ -6,6 +6,9 @@
 .pnp.js
 .yarn/install-state.gz
 
+# firebae
+/src/lib/firebase
+
 # testing
 /coverage
 
