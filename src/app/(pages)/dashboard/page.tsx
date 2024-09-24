@@ -7,37 +7,28 @@ import Clock from "../../components/ui/Clock/Clock";
 import { FaUser } from "react-icons/fa";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
+import { useAuth } from "@/app/context/AuthContext";
 
 const page = () => {
+  const { userData, businessData, loading } = useAuth();
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [user, setUser] = useState<any>(null);
   const markedDates = [
     new Date("2024-09-01"),
     new Date("2024-09-02"),
     new Date("2024-09-03"),
   ];
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);  
-        console.log(user)
-      } else {
-        setUser(null);  
-        console.log("kosong")
-      }
-    });
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
   return (
     <div className="w-full h-full relative flex justify-center items-start m-0 p-0">
       <div className="w-full h-full flex flex-col bg-gray-100  rounded-3xl px-10 p-5 overflow-y-auto">
         <nav className="w-full h-auto">
           <Greeting />
           <h1 className="text-3xl font-urbanist font-semibold">
-            Hai, FastLaundry
+            Hai, {businessData?.name}
           </h1>
         </nav>
         <div className="w-full h-full flex items-start justify-between py-3 font-sans pt-8 gap-7">

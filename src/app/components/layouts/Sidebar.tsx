@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { logout } from "../actions/actions";
 import { useRouter } from "next/navigation";
+import { RiFileHistoryFill } from "react-icons/ri";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -29,6 +30,11 @@ const Sidebar = () => {
       name: "Karyawan",
       icon: <FaUser color="#383F6B" className="w-3 h-3" />,
       destination: "/karyawan",
+    },
+    {
+      name: "Rekap",
+      icon: <RiFileHistoryFill color="#383F6B" className="w-3 h-3" />,
+      destination: "/rekap",
     },
     {
       name: "Catatan",

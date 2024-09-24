@@ -3,10 +3,8 @@ import Loading from "@/app/components/ui/Loading/Loading";
 import React, { useEffect, useState } from "react";
 import { login } from "./actions";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 
 const page = () => {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +19,7 @@ const page = () => {
     if (result.success) {
       setError(null);
       Cookies.set("idToken", result.idToken, { expires: 7 });
-      router.push("/dashboard");
+      window.location.href = "/dashboard"; //Pakek window buat refresh javascript biar trigger useContext kalau router ngk ke trigger useContext
     } else {
       setError(result.message);
       setLoading(false);

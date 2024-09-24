@@ -15,16 +15,11 @@ export function middleware(req: NextRequest) {
   if (
     decodedToken &&
     decodedToken.iat &&
-    (decodedToken.iat * 1000) + (60 * 60 * 1000) < Date.now()
-    // (decodedToken.iat * 1000) + (7 * 24 * 60 * 60 * 1000) < Date.now()
+    decodedToken.iat * 1000 + 7 * 24 * 60 * 60 * 1000 < Date.now()
   ) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  if (decodedToken && decodedToken.iat)
-    console.log(new Date(decodedToken.iat * 1000));
-  console.log(new Date());
-  // console.log(decodedToken);
   return NextResponse.next();
 }
 
