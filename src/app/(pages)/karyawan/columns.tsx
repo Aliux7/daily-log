@@ -26,6 +26,13 @@ export const columns: ColumnDef<Karyawan>[] = [
   {
     accessorKey: "id",
     header: "ID",
+    cell: ({ row }) => {
+      const karyawan = row.original;
+
+      return (
+        <h1 className="text-first-color underline">#{karyawan.id}</h1>
+      );
+    },
   },
   {
     accessorKey: "name",
@@ -49,10 +56,6 @@ export const columns: ColumnDef<Karyawan>[] = [
   {
     accessorKey: "gender",
     header: "Gender",
-  },
-  {
-    accessorKey: "role",
-    header: "Role",
   },
   {
     id: "actions",

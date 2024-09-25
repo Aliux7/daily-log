@@ -19,12 +19,14 @@ import Cookies from "js-cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface UserData {
+  id: string;
   nama: string;
   email: string;
   role: string;
 }
 
 interface BusinessData {
+  id: string;
   name: string;
   phone: string;
   active: Timestamp;
@@ -80,8 +82,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           const docSnap = await getDoc(docRef);
 
           if (docSnap.exists()) {
-            foundBusinessData = businessDoc.data() as BusinessData;
-            setUserData(docSnap.data() as UserData);
+            foundBusinessData = {
+              ...(businessDoc.data() as BusinessData),
+              id: businessDoc.id,
+            };
+            const userDocData = docSnap.data() as UserData;
+            setUserData({
+              ...userDocData,
+              id: docSnap.id,
+            });
             break;
           }
         }

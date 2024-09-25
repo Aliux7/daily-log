@@ -8,6 +8,7 @@ import { FaUser } from "react-icons/fa";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { useAuth } from "@/app/context/AuthContext";
+import Loading from "@/app/components/ui/Loading/Loading";
 
 const page = () => {
   const { userData, businessData, loading } = useAuth();
@@ -19,16 +20,19 @@ const page = () => {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
     <div className="w-full h-full relative flex justify-center items-start m-0 p-0">
       <div className="w-full h-full flex flex-col bg-gray-100  rounded-3xl px-10 p-5 overflow-y-auto">
-        <nav className="w-full h-auto">
+        <nav className="w-full h-auto ">
           <Greeting />
           <h1 className="text-3xl font-urbanist font-semibold">
-            Hai, {businessData?.name}
+            Halo, {userData?.role} {businessData?.name}
+            <span className="text-sm text-gray-500 font-urbanist ml-2">
+              ({userData?.email})
+            </span>
           </h1>
         </nav>
         <div className="w-full h-full flex items-start justify-between py-3 font-sans pt-8 gap-7">

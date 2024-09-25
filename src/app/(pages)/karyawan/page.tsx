@@ -1,20 +1,116 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataTable } from "./data-table";
 import { columns, Karyawan } from "./columns";
 import { FaPlus } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/app/context/AuthContext";
+import { getAllStaffsByBusinessId, insertStaff } from "./actions";
+import { useToast } from "@/hooks/use-toast";
+import Loading from "@/app/components/ui/Loading/Loading";
+import { Toaster } from "@/components/ui/toaster";
 
 async function getData(): Promise<Karyawan[]> {
   return [];
 }
 
 const page = () => {
-  const [data, setdata] = useState<any>([]);
+  const { toast } = useToast();
+  const { userData, businessData, loading } = useAuth();
+
+  const [name, setName] = useState("");
+  const [errorName, setErrorName] = useState("");
+  const [branch, setBranch] = useState("");
+  const [errorBranch, setErrorBranch] = useState("");
+  const [gender, setGender] = useState("");
+  const [errorGender, setErrorGender] = useState("");
+
   const [showPopUp, setShowPopUp] = useState(false);
+  const [data, setdata] = useState<any>([]);
+  const [loadingAdd, setLoadingAdd] = useState(false);
+
+  const handleValidationInput = () => {
+    let valid = true;
+
+    if (name.length < 3 || name.length > 30) {
+      setErrorName("Harap memasukan 3 - 30 karakter.");
+      valid = false;
+    } else {
+      setErrorName("");
+    }
+
+    if (branch.length < 3 || branch.length > 30) {
+      setErrorBranch("Harap memasukan 3 - 30 karakter.");
+      valid = false;
+    } else {
+      setErrorBranch("");
+    }
+
+    if (gender == "" || gender == null) {
+      setErrorGender("Harap memilih salah satu gender");
+      valid = false;
+    } else {
+      setErrorGender("");
+    }
+
+    return valid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoadingAdd(true);
+
+    const valid = handleValidationInput();
+    if (!valid) {
+      setLoadingAdd(false);
+      return;
+    }
+
+    if (!businessData || !businessData.id) {
+      toast({
+        title: "Staff Gagal Ditambahkan ! !",
+        description: "Mohon Maaf, Silakan coba kembali.",
+        type: "foreground",
+      });
+      return;
+    }
+
+    const result = await insertStaff(name, branch, gender, businessData?.id);
+    if (result.success) {
+      setShowPopUp(false);
+      toast({
+        title: "Staff Berhasil Ditambahkan! !",
+        description: "Staff baru telah berhasil terdaftar.",
+        type: "background",
+      });
+    } else {
+      toast({
+        title: "Staff Gagal Ditambahkan ! !",
+        description: "Mohon Maaf, Silakan coba kembali.",
+        type: "foreground",
+      });
+    }
+
+    fetchDataKaryawan();
+    setLoadingAdd(false);
+    setName("");
+    setGender("");
+    setBranch("");
+  };
+
+  const fetchDataKaryawan = async () => {
+    if (businessData) {
+      const result = await getAllStaffsByBusinessId(businessData?.id);
+      if (result?.success) setdata(result.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataKaryawan();
+  }, [businessData]);
 
   return (
     <div className="w-full h-full relative flex justify-center items-start m-0 p-0">
@@ -37,36 +133,74 @@ const page = () => {
             className="relative w-96 max-h-[85vh] h-fit bg-gray-100 rounded-xl p-5"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-col justify-center gap-3 items-start mb-5 mt-1">
-              <Label className="text-primary-text">Nama:</Label>
-              <Input type="text" placeholder="Nama" maxLength={30} />
-            </div>
-            <div className="flex flex-col justify-center gap-3 items-start my-5">
-              <Label className="text-primary-text">Cabang:</Label>
-              <Input type="branch" placeholder="Cabang" maxLength={30} />
-            </div>
-            <div className="flex flex-col justify-center gap-3 items-start my-5">
-              <Label className="text-primary-text">Gender:</Label>
-              <RadioGroup
-                defaultValue="comfortable"
-                className="flex gap-5 mx-1"
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col justify-center gap-3 items-start mb-5 mt-1">
+                <Label className="text-primary-text">Nama:</Label>
+                <Input
+                  type="text"
+                  placeholder="John Doe"
+                  maxLength={30}
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                {errorName && (
+                  <p className="ml-1 text-xs text-red-600 dark:text-red-500">
+                    {errorName}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col justify-center gap-3 items-start my-5">
+                <Label className="text-primary-text">Cabang:</Label>
+                <Input
+                  type="branch"
+                  placeholder="Jakarta"
+                  maxLength={30}
+                  required
+                  value={branch}
+                  onChange={(e) => setBranch(e.target.value)}
+                />
+                {errorBranch && (
+                  <p className="ml-1 text-xs text-red-600 dark:text-red-500">
+                    {errorBranch}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col justify-center gap-3 items-start my-5">
+                <Label className="text-primary-text">Gender:</Label>
+                <RadioGroup
+                  defaultValue="comfortable"
+                  className="flex gap-5 mx-1"
+                  value={gender}
+                  onValueChange={(value) => setGender(value)}
+                >
+                  <div className="flex items-center space-x-2 cursor-pointer">
+                    <RadioGroupItem value="Pria" id="r1" />
+                    <Label htmlFor="r1">Pria</Label>
+                  </div>
+                  <div className="flex items-center space-x-2 cursor-pointer">
+                    <RadioGroupItem value="Wanita" id="r2" />
+                    <Label htmlFor="r2">Wanita</Label>
+                  </div>
+                </RadioGroup>
+                {errorGender && (
+                  <p className="ml-1 text-xs text-red-600 dark:text-red-500">
+                    {errorGender}
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="bg-first-color text-white w-full text-center rounded-xl py-2"
               >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Pria" id="r1" />
-                  <Label htmlFor="r1">Pria</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Wanita" id="r2" />
-                  <Label htmlFor="r2">Wanita</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            <button className="bg-first-color text-white w-full text-center rounded-xl py-2">
-              Tambahkan
-            </button>
+                Tambahkan
+              </button>
+            </form>
           </div>
         </div>
       )}
+      {loadingAdd && <Loading />}
+      <Toaster />
     </div>
   );
 };

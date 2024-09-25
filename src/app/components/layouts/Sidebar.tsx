@@ -27,14 +27,14 @@ const Sidebar = () => {
       destination: "/absensi",
     },
     {
-      name: "Karyawan",
-      icon: <FaUser color="#383F6B" className="w-3 h-3" />,
-      destination: "/karyawan",
-    },
-    {
       name: "Rekap",
       icon: <RiFileHistoryFill color="#383F6B" className="w-3 h-3" />,
       destination: "/rekap",
+    },
+    {
+      name: "Karyawan",
+      icon: <FaUser color="#383F6B" className="w-3 h-3" />,
+      destination: "/karyawan",
     },
     {
       name: "Catatan",
