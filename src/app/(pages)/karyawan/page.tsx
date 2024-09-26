@@ -25,12 +25,21 @@ const page = () => {
   const [errorName, setErrorName] = useState("");
   const [branch, setBranch] = useState("");
   const [errorBranch, setErrorBranch] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [errorSelectedFile, setErrorSelectedFile] = useState("");
   const [gender, setGender] = useState("");
   const [errorGender, setErrorGender] = useState("");
 
   const [showPopUp, setShowPopUp] = useState(false);
   const [data, setdata] = useState<any>([]);
   const [loadingAdd, setLoadingAdd] = useState(false);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
 
   const handleValidationInput = () => {
     let valid = true;
@@ -56,6 +65,13 @@ const page = () => {
       setErrorGender("");
     }
 
+    if (selectedFile == null) {
+      setErrorSelectedFile("Harap memasukan photo terbaru karyawan");
+      valid = false;
+    } else {
+      setErrorSelectedFile("");
+    }
+
     return valid;
   };
 
@@ -77,8 +93,24 @@ const page = () => {
       });
       return;
     }
+    if (selectedFile == null) {
+      toast({
+        title: "Staff Gagal Ditambahkan ! !",
+        description: "Mohon Maaf, Silakan memasukan gambar kembali.",
+        type: "foreground",
+      });
+      return;
+    }
 
-    const result = await insertStaff(name, branch, gender, businessData?.id);
+    console.log("GAMBAR MASUK")
+
+    const result = await insertStaff(
+      name,
+      branch,
+      gender,
+      selectedFile,
+      businessData?.id
+    );
     if (result.success) {
       setShowPopUp(false);
       toast({
@@ -153,7 +185,7 @@ const page = () => {
               <div className="flex flex-col justify-center gap-3 items-start my-5">
                 <Label className="text-primary-text">Cabang:</Label>
                 <Input
-                  type="branch"
+                  type="text"
                   placeholder="Jakarta"
                   maxLength={30}
                   required
@@ -163,6 +195,20 @@ const page = () => {
                 {errorBranch && (
                   <p className="ml-1 text-xs text-red-600 dark:text-red-500">
                     {errorBranch}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col justify-center gap-3 items-start my-5">
+                <Label className="text-primary-text">Foto Terbaru:</Label>
+                <Input
+                  type="file"
+                  required
+                  accept=".jpg, .jpeg, .png"
+                  onChange={handleFileChange}
+                />
+                {errorSelectedFile && (
+                  <p className="ml-1 text-xs text-red-600 dark:text-red-500">
+                    {errorSelectedFile}
                   </p>
                 )}
               </div>
