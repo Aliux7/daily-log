@@ -9,14 +9,14 @@ export const insertStaff = async (
   businessId: string
 ) => {
   try {
-    const profileUrl = await uploadImageToFirebase(businessId, profile);
     const staffData = {
       name: name,
       branch: branch,
       gender: gender,
-      profileUrl: profileUrl,
+      profileUrl: "",
     };
-    const response = await fetch("/api/staff", {
+
+    const responseInsert = await fetch("/api/staff", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,16 +24,52 @@ export const insertStaff = async (
       body: JSON.stringify({ businessId, staffData }),
     });
 
-    const result = await response.json();
+    const resultInsert = await responseInsert.json();
 
-    if (result.success) {
-      return { success: true, exists: result.exists };
+    if (resultInsert.success) {
+      const staffId = resultInsert.staffId;
+      const profileUrl = await uploadImageToFirebase(
+        businessId,
+        staffId,
+        profile
+      );
+
+      const responseUpdate = await fetch("/api/staff", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          businessId,
+          staffId,
+          profileUrl,
+        }),
+      });
+
+      const resultUpdate = await responseUpdate.json();
+
+      if (resultUpdate.success) {
+        return { success: true, message: "Insert Successful" };
+      } else {
+        return { success: false, message: resultUpdate.message };
+      }
     } else {
-      return { success: false, message: "Failed to check company name." };
+      return { success: false, message: resultInsert.message };
     }
   } catch (error) {
     return { success: false, message: "Error checking company name: " + error };
   }
+};
+
+export const uploadImageToFirebase = async (
+  businessId: string,
+  userId: string,
+  file: File
+) => {
+  const storageRef = ref(storage, `${businessId}/profiles/${userId}`);
+  const uploadTask = await uploadBytesResumable(storageRef, file);
+  const downloadURL = await getDownloadURL(uploadTask.ref);
+  return downloadURL;
 };
 
 export const getAllStaffsByBusinessId = async (businessId: string) => {
@@ -53,9 +89,59 @@ export const getAllStaffsByBusinessId = async (businessId: string) => {
   }
 };
 
-export const uploadImageToFirebase = async (businessId: string, file: File) => {
-  const storageRef = ref(storage, `${businessId}/profiles/${file.name}`);
-  const uploadTask = await uploadBytesResumable(storageRef, file);
-  const downloadURL = await getDownloadURL(uploadTask.ref);
-  return downloadURL;
+export const getStaffByBusinessId = async (
+  businessId: string,
+  staffId: string
+) => {
+  try {
+    const response = await fetch(
+      `/api/staff?businessId=${businessId}&staffId=${staffId}`
+    );
+    const data = await response.json();
+
+    if (data.success) {
+      return { success: true, data: data.staffData ? data.staffData : "" };
+    } else {
+      return { success: false, message: data.message };
+    }
+  } catch (error: any) {
+    console.error("API call failed:", error.message);
+  }
+};
+
+export const updateStaff = async (
+  name: string,
+  branch: string,
+  gender: string,
+  businessId: string,
+  staffId: string,
+  profile?: File | null
+) => {
+  let profileUrl = null;
+  if (profile) {
+    profileUrl = await uploadImageToFirebase(businessId, staffId, profile);
+  }
+
+  const responseUpdate = await fetch("/api/staff", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      businessId,
+      staffId,
+      profileUrl,
+      branch,
+      gender,
+      name,
+    }),
+  });
+
+  const resultUpdate = await responseUpdate.json();
+
+  if (resultUpdate.success) {
+    return { success: true, message: "Insert Successful" };
+  } else {
+    return { success: false, message: resultUpdate.message };
+  }
 };
