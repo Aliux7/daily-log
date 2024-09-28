@@ -8,7 +8,7 @@ import { useAuth } from "@/app/context/AuthContext";
 import { getAllStaffsByBusinessId } from "./actions";
 import Loading from "@/app/components/ui/Loading/Loading";
 import { Toaster } from "@/components/ui/toaster";
-import PopUpKaryawan from "@/app/components/popup/PopUpKaryawan";
+import PopUpKaryawan from "@/app/components/popup/karyawan/PopUpKaryawan";
 
 const page = () => {
   const { userData, businessData, loading } = useAuth();

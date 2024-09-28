@@ -7,7 +7,7 @@ export default function GuestLayout({
     <div className="relative flex justify-center items-center w-full h-full">
       <div className="absolute top-5 left-10">
         <strong className="text-3xl transition-all duration-400 ease-in-out overflow-x-hidden opacity-100 w-auto">
-          DailyLog<span className="text-first-color">.</span>
+          AbsenKu<span className="text-first-color">.</span>
         </strong>
       </div>
       {children}

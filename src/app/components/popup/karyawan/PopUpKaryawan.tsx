@@ -33,6 +33,8 @@ function PopUpKaryawan(props: PopUpKaryawanProps) {
   useEffect(() => {
     if (props.selectedRowId) {
       const getStaffToUpdate = async () => {
+        setName("Loading . . .");
+        setBranch("Loading . . .");
         const result = await getStaffByBusinessId(
           props.businessId as string,
           props.selectedRowId as string

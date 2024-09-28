@@ -12,7 +12,7 @@ const Navbar = () => {
           <div className="flex justify-center items-end gap-5">
             <Link href="/dashboard">
               <strong className="text-2xl">
-                DailyLog
+                AbsenKu
                 <span className="text-blue-900">.</span>
               </strong>
             </Link>

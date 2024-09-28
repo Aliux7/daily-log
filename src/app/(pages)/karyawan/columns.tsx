@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useState } from "react";
-import PopUpKaryawan from "@/app/components/popup/PopUpKaryawan";
+import PopUpKaryawan from "@/app/components/popup/karyawan/PopUpKaryawan";
+import ConfirmationKaryawan from "@/app/components/popup/karyawan/ConfirmationKaryawan";
+import ShiftKaryawan from "@/app/components/popup/karyawan/ShiftKaryawan";
 
 export type Karyawan = {
   id: string;
@@ -25,7 +27,6 @@ export type Karyawan = {
   role: string;
 };
 
-// Make columns a function that accepts external data
 export const getColumns = (
   fetchDataKaryawan: () => void,
   businessData: any,
@@ -37,7 +38,7 @@ export const getColumns = (
       header: "ID",
       cell: ({ row }: any) => {
         const karyawan = row.original;
-        return <h1 className="text-first-color underline">#{karyawan.id}</h1>;
+        return <h1 className="text-first-color">#{karyawan.id}</h1>;
       },
     },
     {
@@ -94,6 +95,33 @@ export const getColumns = (
       },
     },
     {
+      accessorKey: "shift",
+      header: "Shift",
+      cell: ({ row }: any) => {
+        const [open, setOpen] = useState(false);
+        const karyawan = row.original;
+
+        return (
+          <div>
+            {open && (
+              <ShiftKaryawan
+                setOpen={setOpen}
+                setLoading={setLoading}
+                selectedRowId={karyawan.id}
+                businessId={businessData?.id ? businessData.id : ""}
+              />
+            )}
+            <h1
+              className="text-first-color underline cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
+              Atur Shift
+            </h1>
+          </div>
+        );
+      },
+    },
+    {
       id: "actions",
       cell: ({ row }: any) => {
         const karyawan = row.original;
@@ -114,12 +142,23 @@ export const getColumns = (
               <DropdownMenuItem onClick={() => setShowEditPopUp(true)}>
                 Ubah Data Karyawan
               </DropdownMenuItem>
-              <DropdownMenuItem>Hapus Karyawan</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowDeletePopUp(true)}>
+                Hapus Karyawan
+              </DropdownMenuItem>
             </DropdownMenuContent>
             {showEditPopUp && (
               <PopUpKaryawan
                 fetchDataKaryawan={fetchDataKaryawan}
                 setShowPopUp={setShowEditPopUp}
+                selectedRowId={karyawan.id}
+                setLoading={setLoading}
+                businessId={businessData?.id ? businessData.id : ""}
+              />
+            )}
+            {showDeletePopUp && (
+              <ConfirmationKaryawan
+                fetchDataKaryawan={fetchDataKaryawan}
+                setShowPopUp={setShowDeletePopUp}
                 selectedRowId={karyawan.id}
                 setLoading={setLoading}
                 businessId={businessData?.id ? businessData.id : ""}

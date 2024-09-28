@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { firestore } from "@/lib/firebase/firebaseConfig";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { firestore, storage } from "@/lib/firebase/firebaseConfig";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
 export async function GET(req: NextRequest) {
   try {
@@ -142,6 +150,70 @@ export async function PATCH(req: NextRequest) {
         success: false,
         message: "Failed to update staff profile: " + error,
       },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { businessId, staffId } = body;
+
+    if (!businessId || !staffId) {
+      return NextResponse.json(
+        { success: false, message: "Missing businessId or staffId" },
+        { status: 400 }
+      );
+    }
+
+    const staffDocRef = doc(
+      firestore,
+      `businesses/${businessId}/staffs/${staffId}`
+    );
+    const staffDocSnap = await getDoc(staffDocRef);
+
+    if (!staffDocSnap.exists()) {
+      return NextResponse.json(
+        { success: false, message: "Staff not found" },
+        { status: 404 }
+      );
+    }
+
+    const staffData = staffDocSnap.data();
+    const profileUrl = staffData?.profileUrl;
+
+    if (profileUrl) {
+      const fileRef = ref(storage, profileUrl);
+
+      try {
+        await deleteObject(fileRef);
+        console.log(`Deleted profile image: ${profileUrl}`);
+      } catch (error) {
+        console.error(`Error deleting profile image: ${error}`);
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Failed to delete profile image: " + error,
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    await deleteDoc(staffDocRef);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Staff deleted successfully",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting staff: ", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to delete staff: " + error },
       { status: 500 }
     );
   }

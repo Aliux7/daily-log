@@ -14,6 +14,15 @@ export const insertStaff = async (
       branch: branch,
       gender: gender,
       profileUrl: "",
+      shift: [
+        { day: "Senin", clockIn: "", clockOut: "" },
+        { day: "Selasa", clockIn: "", clockOut: "" },
+        { day: "Rabu", clockIn: "", clockOut: "" },
+        { day: "Kamis", clockIn: "", clockOut: "" },
+        { day: "Jumat", clockIn: "", clockOut: "" },
+        { day: "Sabtu", clockIn: "", clockOut: "" },
+        { day: "Minggu", clockIn: "", clockOut: "" },
+      ],
     };
 
     const responseInsert = await fetch("/api/staff", {
@@ -140,7 +149,54 @@ export const updateStaff = async (
   const resultUpdate = await responseUpdate.json();
 
   if (resultUpdate.success) {
-    return { success: true, message: "Insert Successful" };
+    return { success: true, message: "Update Successful" };
+  } else {
+    return { success: false, message: resultUpdate.message };
+  }
+};
+
+export const deleteStaff = async (businessId: string, staffId: string) => {
+  const response = await fetch("/api/staff", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      businessId,
+      staffId,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    return { success: true, message: "Delete Successful" };
+  } else {
+    return { success: false, message: result.message };
+  }
+};
+
+export const updateStaffShift = async (
+  businessId: string,
+  staffId: string,
+  shift: any
+) => {
+  const responseUpdate = await fetch("/api/staff/shift", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      businessId,
+      staffId,
+      shift,
+    }),
+  });
+
+  const resultUpdate = await responseUpdate.json();
+
+  if (resultUpdate.success) {
+    return { success: true, message: "Update Shift Successful" };
   } else {
     return { success: false, message: resultUpdate.message };
   }

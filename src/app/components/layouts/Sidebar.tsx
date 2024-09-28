@@ -9,9 +9,10 @@ import { IoLogOut } from "react-icons/io5";
 import { PiNotepadFill } from "react-icons/pi";
 import Cookies from "js-cookie";
 import { auth } from "@/lib/firebase/firebaseConfig";
-import { logout } from "../actions/actions";
+
 import { useRouter } from "next/navigation";
 import { RiFileHistoryFill } from "react-icons/ri";
+import { logout } from "@/app/(auth)/login/actions";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -100,7 +101,7 @@ const Sidebar = () => {
               }`}
             >
               <Link href="/dashboard">
-                DailyLog<span className="text-first-color">.</span>
+                AbsenKu<span className="text-first-color">.</span>
               </Link>
             </strong>
           </div>
