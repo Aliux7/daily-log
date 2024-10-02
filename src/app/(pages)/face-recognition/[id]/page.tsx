@@ -13,15 +13,15 @@ export default function page() {
     const loadModels = async () => {
       try {
         await Promise.all([
-          faceapi.nets.ssdMobilenetv1.loadFromUri("/models"), // Load SsdMobilenetv1 instead of TinyFaceDetector
+          faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
           faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
           faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-          faceapi.nets.faceExpressionNet.loadFromUri("/models"),
         ]);
 
         const refFace = await faceapi.fetchImage(
+          "https://media.licdn.com/dms/image/v2/D5603AQFGSv1zjsHNAA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1721640614676?e=1733356800&v=beta&t=w3Xxgk3vIVqxlGuXiN388Q3LWs9vZQVaMCCqbpb-_To"
           // "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Michael_Jordan_in_2014.jpg/220px-Michael_Jordan_in_2014.jpg"
-          "https://media.licdn.com/dms/image/v2/D5603AQFWvalwfG08Aw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1716183311690?e=1731542400&v=beta&t=CRZNlAjCtOa-Cu-KR4dM7csf_Kw9KA-nG-0Bg5vDrmU"
+          // "https://media.licdn.com/dms/image/v2/D5603AQFWvalwfG08Aw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1716183311690?e=1731542400&v=beta&t=CRZNlAjCtOa-Cu-KR4dM7csf_Kw9KA-nG-0Bg5vDrmU"
         );
 
         const refFaceData = await faceapi
@@ -71,10 +71,9 @@ export default function page() {
               .detectAllFaces(
                 videoRef.current,
                 new faceapi.SsdMobilenetv1Options()
-              ) // Use SsdMobilenetv1Options for face detection
+              )  
               .withFaceLandmarks()
-              .withFaceDescriptors()
-              .withFaceExpressions();
+              .withFaceDescriptors();
             const resizedDetections = faceapi.resizeResults(
               detections,
               displaySize
@@ -84,7 +83,6 @@ export default function page() {
               ctx.clearRect(0, 0, displaySize.width, displaySize.height);
               faceapi.draw.drawDetections(canvas, resizedDetections);
               faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-              faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 
               if (faceMatcher) {
                 resizedDetections.forEach((detection) => {

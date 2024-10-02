@@ -19,7 +19,7 @@ const page = () => {
   const fetchDataKaryawan = async () => {
     if (businessData) {
       const result = await getAllStaffsByBusinessId(businessData?.id);
-      if (result?.success) setdata(result.data);
+      if (result?.success) setdata(result.data); 
     }
   };
 

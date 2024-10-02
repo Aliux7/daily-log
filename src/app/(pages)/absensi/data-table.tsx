@@ -64,6 +64,7 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm shadow-xl text-base py-6 rounded-xl bg-background-color h-full"
         />
+
         <div className="flex items-center justify-end space-x-2 h-full">
           <Button
             className="h-full shadow-xl"
