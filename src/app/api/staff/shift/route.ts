@@ -8,7 +8,6 @@ import {
   getDoc,
   updateDoc,
 } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
 
 export async function GET(req: NextRequest) {
   try {

@@ -1,4 +1,5 @@
 import { storage } from "@/lib/firebase/firebaseConfig";
+import { drive } from "@/lib/googledrive/googledriveConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export const insertStaff = async (
@@ -75,10 +76,34 @@ export const uploadImageToFirebase = async (
   userId: string,
   file: File
 ) => {
-  const storageRef = ref(storage, `${businessId}/profiles/${userId}`);
-  const uploadTask = await uploadBytesResumable(storageRef, file);
-  const downloadURL = await getDownloadURL(uploadTask.ref);
-  return downloadURL;
+  // try {
+  //   const fileMetadata = {
+  //     name: `${businessId}-${userId}-${file.name}`,
+  //     parents: ["your-google-drive-folder-id"],
+  //   };
+
+  //   const media = {
+  //     mimeType: file.type,
+  //     body: file.stream(),
+  //   };
+
+  //   const response = await drive.files.create({
+  //     requestBody: fileMetadata,
+  //     media: media,
+  //     fields: "id, webViewLink, webContentLink",
+  //   });
+
+  //   const { id, webViewLink, webContentLink } = response.data;
+ 
+  //   return {
+  //     fileId: id,
+  //     viewLink: webViewLink,
+  //     downloadLink: webContentLink,
+  //   };
+  // } catch (error) {
+  //   console.error("Error uploading file to Google Drive:", error);
+  //   throw error;
+  // }
 };
 
 export const getAllStaffsByBusinessId = async (businessId: string) => {

@@ -9,6 +9,9 @@ import { IoLogOut } from "react-icons/io5";
 import { PiNotepadFill } from "react-icons/pi";
 import Cookies from "js-cookie";
 import { auth } from "@/lib/firebase/firebaseConfig";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
+
+
 
 import { useRouter } from "next/navigation";
 import { RiFileHistoryFill } from "react-icons/ri";
@@ -35,6 +38,11 @@ const Sidebar = () => {
     {
       name: "Karyawan",
       icon: <FaUser color="#383F6B" className="w-3 h-3" />,
+      destination: "/karyawan",
+    },
+    {
+      name: "Gaji",
+      icon: <RiMoneyDollarCircleFill  color="#383F6B" className="w-3 h-3" />,
       destination: "/karyawan",
     },
     {

@@ -5,14 +5,15 @@ import {
   doc,
   getDoc,
   getDocs,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const businessId = searchParams.get("businessId");
+    const selectedDate = searchParams.get("date");
 
     if (!businessId) {
       return NextResponse.json(
@@ -21,6 +22,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    if (!selectedDate) {
+      return NextResponse.json(
+        { success: false, message: "Missing selected date" },
+        { status: 400 }
+      );
+    }
+
+    // Get all staff members under this business
     const staffsCollectionRef = collection(
       firestore,
       `businesses/${businessId}/staffs`
@@ -45,8 +54,7 @@ export async function GET(req: NextRequest) {
 
       const attendanceDocRef = doc(
         firestore,
-        `businesses/${businessId}/staffs/${staffDoc.id}/attendance`,
-        "unfinished"
+        `businesses/${businessId}/staffs/${staffDoc.id}/attendance/${selectedDate}`
       );
       const attendanceDocSnap = await getDoc(attendanceDocRef);
 
@@ -60,7 +68,7 @@ export async function GET(req: NextRequest) {
         name,
         branch,
         profileUrl,
-        ongoing: attendanceData,
+        attendance: attendanceData,
       });
     }
 
@@ -76,42 +84,35 @@ export async function GET(req: NextRequest) {
     );
   }
 }
- 
-// export async function POST(req: NextRequest) {
-//   try {
-//     // Parse request body
-//     const body = await req.json();
-//     const { businessId, staffId, shift, profileUrlToDelete } = body;
 
-//     if (!businessId || !staffId || !shift) {
-//       return NextResponse.json(
-//         { success: false, message: "Missing required fields" },
-//         { status: 400 }
-//       );
-//     }
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { businessId, staffId, selectedDate, attendanceData } = body;
 
-//     // Update the staff shift in Firestore
-//     const staffDocRef = doc(
-//       firestore,
-//       `businesses/${businessId}/staffs/${staffId}`
-//     );
-//     await updateDoc(staffDocRef, { shift });
+    if (!businessId || !staffId || !selectedDate || !attendanceData) {
+      return NextResponse.json(
+        { success: false, message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
 
-//     // If there is a profile URL to delete, delete the file from Firebase Storage
-//     if (profileUrlToDelete) {
-//       const storageRef = ref(storage, profileUrlToDelete);
-//       await deleteObject(storageRef);
-//     }
+    const attendanceDocRef = doc(
+      firestore,
+      `businesses/${businessId}/staffs/${staffId}/attendance/${selectedDate}`
+    );
 
-//     return NextResponse.json({
-//       success: true,
-//       message: "Shift updated successfully",
-//     });
-//   } catch (error: any) {
-//     console.error("Error in POST: ", error);
-//     return NextResponse.json(
-//       { success: false, message: error.message },
-//       { status: 500 }
-//     );
-//   }
-// }
+    await setDoc(attendanceDocRef, attendanceData, { merge: true });
+
+    return NextResponse.json({
+      success: true,
+      message: "Attendance data successfully updated or inserted",
+    });
+  } catch (error: any) {
+    console.error("Error in POST: ", error);
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
+  }
+}

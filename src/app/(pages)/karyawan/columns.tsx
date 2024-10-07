@@ -82,6 +82,7 @@ export const getColumns = (
                   src={karyawan.profileUrl}
                   className="max-h-[90vh] max-w-[90vw] h-auto w-auto"
                 />
+                {/* {karyawan.profileUrl} */}
               </div>
             )}
             <h1
