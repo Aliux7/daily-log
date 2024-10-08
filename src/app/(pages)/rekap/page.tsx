@@ -15,8 +15,7 @@ const formatDateToString = (date: Date | undefined): string => {
 };
 
 const page = () => {
-  const { userData, businessData } = useAuth();
-  const [showPopUp, setShowPopUp] = useState(false);
+  const { userData, businessData } = useAuth(); 
   const [data, setdata] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());

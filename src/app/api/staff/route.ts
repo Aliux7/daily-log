@@ -89,7 +89,6 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { businessId, staffId, profileUrl, branch, gender, name } = body;
 
-    // Validate essential fields
     if (!businessId || !staffId) {
       return NextResponse.json(
         {

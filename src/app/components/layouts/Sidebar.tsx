@@ -43,7 +43,7 @@ const Sidebar = () => {
     {
       name: "Gaji",
       icon: <RiMoneyDollarCircleFill  color="#383F6B" className="w-3 h-3" />,
-      destination: "/karyawan",
+      destination: "/gaji",
     },
     {
       name: "Catatan",

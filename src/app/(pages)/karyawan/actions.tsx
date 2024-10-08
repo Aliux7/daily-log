@@ -1,5 +1,4 @@
 import { storage } from "@/lib/firebase/firebaseConfig";
-import { drive } from "@/lib/googledrive/googledriveConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export const insertStaff = async (
@@ -38,11 +37,7 @@ export const insertStaff = async (
 
     if (resultInsert.success) {
       const staffId = resultInsert.staffId;
-      const profileUrl = await uploadImageToFirebase(
-        businessId,
-        staffId,
-        profile
-      );
+      const profileUrl = await convertImageToBase64Url(profile);
 
       const responseUpdate = await fetch("/api/staff", {
         method: "PATCH",
@@ -71,39 +66,21 @@ export const insertStaff = async (
   }
 };
 
-export const uploadImageToFirebase = async (
-  businessId: string,
-  userId: string,
-  file: File
-) => {
-  // try {
-  //   const fileMetadata = {
-  //     name: `${businessId}-${userId}-${file.name}`,
-  //     parents: ["your-google-drive-folder-id"],
-  //   };
+export const convertImageToBase64Url = (profile: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
 
-  //   const media = {
-  //     mimeType: file.type,
-  //     body: file.stream(),
-  //   };
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      resolve(base64String);
+    };
 
-  //   const response = await drive.files.create({
-  //     requestBody: fileMetadata,
-  //     media: media,
-  //     fields: "id, webViewLink, webContentLink",
-  //   });
+    reader.onerror = (error) => {
+      reject("Error converting file to Base64: " + error);
+    };
 
-  //   const { id, webViewLink, webContentLink } = response.data;
- 
-  //   return {
-  //     fileId: id,
-  //     viewLink: webViewLink,
-  //     downloadLink: webContentLink,
-  //   };
-  // } catch (error) {
-  //   console.error("Error uploading file to Google Drive:", error);
-  //   throw error;
-  // }
+    reader.readAsDataURL(profile);
+  });
 };
 
 export const getAllStaffsByBusinessId = async (businessId: string) => {
@@ -153,7 +130,7 @@ export const updateStaff = async (
 ) => {
   let profileUrl = null;
   if (profile) {
-    profileUrl = await uploadImageToFirebase(businessId, staffId, profile);
+    profileUrl = await convertImageToBase64Url(profile);
   }
 
   const responseUpdate = await fetch("/api/staff", {

@@ -5,7 +5,7 @@ import { DataTable } from "./data-table";
 import { getColumns, Karyawan } from "./columns";
 import { FaPlus } from "react-icons/fa";
 import { useAuth } from "@/app/context/AuthContext";
-import { getAllStaffsByBusinessId, uploadImageToFirebase } from "./actions";
+import { getAllStaffsByBusinessId } from "./actions";
 import Loading from "@/app/components/ui/Loading/Loading";
 import { Toaster } from "@/components/ui/toaster";
 import PopUpKaryawan from "@/app/components/popup/karyawan/PopUpKaryawan";
@@ -25,26 +25,8 @@ const page = () => {
     setLoading(false);
   };
 
-  // const tryUpload = async () => {
-  //   console.log("TEST")
-  //   if (businessData && userData) {
-  //     const response = await fetch("/model.jpg");
-  //     const fileBlob = await response.blob();
-
-  //     const file = new File([fileBlob], "model.jpg", { type: fileBlob.type });
-  //     const result = uploadImageToFirebase(
-  //       businessData?.id,
-  //       userData?.id,
-  //       file
-  //     );
-
-  //     console.log(result);
-  //   }
-  // };
-
   useEffect(() => {
     fetchDataKaryawan();
-    // tryUpload();
   }, [businessData]);
 
   return (
