@@ -19,6 +19,8 @@ import ConfirmationKaryawan from "@/app/components/popup/karyawan/ConfirmationKa
 import ShiftKaryawan from "@/app/components/popup/karyawan/ShiftKaryawan";
 import { format } from "date-fns";
 import PopUpRekap from "@/app/components/popup/rekap/PopUpRekap";
+import { clockIn, clockOut } from "../absensi/actions";
+import { Timestamp } from "firebase/firestore";
 
 export type Karyawan = {
   id: string;
@@ -34,7 +36,8 @@ export const getColumns = (
   fetchDataRekap: () => void,
   businessData: any,
   userData: any,
-  setLoading: (value: boolean) => void
+  setLoading: (value: boolean) => void,
+  payslip: number
 ) => {
   return [
     {
@@ -47,7 +50,7 @@ export const getColumns = (
         return <h1 className="text-center">Jam Masuk</h1>;
       },
       cell: ({ row }: any) => {
-        const karyawan = row.original; 
+        const karyawan = row.original;
         let formattedTime = "";
         let date = undefined;
         let dd = "";
@@ -189,29 +192,29 @@ export const getColumns = (
       },
       cell: ({ row }: any) => {
         const karyawan = row.original;
-        let formattedTime = "";
-        let date = undefined;
-        let dd = "";
-        let mm = "";
-        if (karyawan?.overtimeClockOut) {
-          const { seconds } = karyawan.overtimeClockOut;
-          date = new Date(seconds * 1000);
-          dd = format(date, "dd");
-          mm = format(date, "MM");
-          formattedTime = format(date, "HH:mm");
-        }
+        if (!karyawan.clockIn)
+          return <h1 className={`text-center`}>0 jam : 0 menit</h1>;
+
+        const convertFirestoreTimestampToDate = (timestamp: Timestamp) => {
+          const milliseconds =
+            timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
+          return new Date(milliseconds);
+        };
+
+        const clockInTime = convertFirestoreTimestampToDate(karyawan.clockIn);
+        const clockOutTime = convertFirestoreTimestampToDate(karyawan.clockOut);
+
+        const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+
+        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
 
         return (
           <div>
             <h1 className={`text-center`}>
-              {!karyawan?.overtimeClockOut ? (
-                "-- : --"
-              ) : (
-                <div>
-                  <sup className="font-semibold">{dd}</sup>/
-                  <sub className="font-semibold">{mm}</sub> ({formattedTime})
-                </div>
-              )}
+              {hours} jam : {minutes} menit
             </h1>
           </div>
         );
@@ -224,30 +227,45 @@ export const getColumns = (
       },
       cell: ({ row }: any) => {
         const karyawan = row.original;
-        let formattedTime = "";
-        let date = undefined;
-        let dd = "";
-        let mm = "";
-        if (karyawan?.overtimeClockOut) {
-          const { seconds } = karyawan.overtimeClockOut;
-          date = new Date(seconds * 1000);
-          dd = format(date, "dd");
-          mm = format(date, "MM");
-          formattedTime = format(date, "HH:mm");
-        }
+        if (
+          !karyawan.clockIn &&
+          !karyawan.clockOut &&
+          !karyawan.overtimeClockIn &&
+          !karyawan.overtimeClockOut
+        )
+          return <h1 className={`text-center`}>Rp. 0,00</h1>;
 
+        const convertFirestoreTimestampToDate = (timestamp: Timestamp) => {
+          const milliseconds =
+            timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
+          return new Date(milliseconds);
+        };
+
+        const clockInTime = convertFirestoreTimestampToDate(karyawan.clockIn);
+        const clockOutTime = convertFirestoreTimestampToDate(karyawan.clockOut);
+
+        const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+
+        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+        const minutes = Math.floor(
+          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+
+        const subtotalPayslip = hours * payslip + (payslip / 60) * minutes;
+
+        const formatToIDR = (amount: number) => {
+          return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0, // Adjust as needed
+            maximumFractionDigits: 0, // Adjust as needed
+          }).format(amount);
+        };
+
+        const formattedSubtotal = formatToIDR(subtotalPayslip);
         return (
           <div>
-            <h1 className={`text-center`}>
-              {!karyawan?.overtimeClockOut ? (
-                "-- : --"
-              ) : (
-                <div>
-                  <sup className="font-semibold">{dd}</sup>/
-                  <sub className="font-semibold">{mm}</sub> ({formattedTime})
-                </div>
-              )}
-            </h1>
+            <h1 className={`text-center`}>{formattedSubtotal}</h1>
           </div>
         );
       },

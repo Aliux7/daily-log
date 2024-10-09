@@ -42,6 +42,8 @@ import { ComboboxName } from "@/app/components/ui/ComboboxName";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  payslip: number;
+  setPayslip: (value: number) => void;
   date: string;
   setDate: (date: string) => void;
 }
@@ -51,6 +53,8 @@ export function DataTable<TData, TValue>({
   data,
   date,
   setDate,
+  payslip,
+  setPayslip,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -78,10 +82,21 @@ export function DataTable<TData, TValue>({
           <ComboboxName />
           <Input
             type="month"
-            className="max-w-sm shadow-xl text-base py-6 rounded-md bg-background-color h-full"
+            className="max-w-sm shadow-xl text-base py-6 rounded-md bg-background-color h-ful"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          <Input
+            type="number"
+            step={100}
+            className="max-w-sm shadow-xl text-base py-6 rounded-md bg-background-color h-full"
+            placeholder="Masukan Gaji Per Jam"
+            value={payslip}
+            onChange={(e) => setPayslip(e.target.valueAsNumber)}
+          />
+          <Button className="h-full shadow-xl bg-first-color px-5">
+            Simpan
+          </Button>
         </div>
       </div>
       <div className="shadow-xl rounded-xl ">

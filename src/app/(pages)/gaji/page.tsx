@@ -15,6 +15,7 @@ const page = () => {
   const [data, setdata] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().slice(0, 7));
+  const [payslip, setPayslip] = useState(1000);
 
   const fetchDataRekap = async () => {
     setLoading(true);
@@ -63,7 +64,7 @@ const page = () => {
 
   useEffect(() => {
     fetchDataRekap();
-  }, [businessData, date]);
+  }, [businessData, date, payslip]);
 
   return (
     <div className="w-full h-full relative flex justify-center items-start m-0 p-0">
@@ -72,12 +73,15 @@ const page = () => {
         <DataTable
           date={date}
           setDate={setDate}
+          payslip={payslip}
+          setPayslip={setPayslip}
           columns={getColumns(
             date,
             fetchDataRekap,
             businessData,
             userData,
-            setLoading
+            setLoading,
+            payslip
           )}
           data={data}
         />
