@@ -42,10 +42,13 @@ import { ComboboxName } from "@/app/components/ui/ComboboxName";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  payslip: number;
-  setPayslip: (value: number) => void;
+  hourlyPaid: number;
+  setHourlyPaid: (value: number) => void;
   date: string;
   setDate: (date: string) => void;
+  handleUpdateHourlyPaid: () => void;
+  listStaff: any;
+  setSelectedStaff: (value: string) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -53,8 +56,11 @@ export function DataTable<TData, TValue>({
   data,
   date,
   setDate,
-  payslip,
-  setPayslip,
+  hourlyPaid,
+  setHourlyPaid,
+  handleUpdateHourlyPaid,
+  listStaff,
+  setSelectedStaff,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -79,24 +85,35 @@ export function DataTable<TData, TValue>({
     <div className="">
       <div className="flex items-center justify-between mb-4 h-12">
         <div className="flex items-center justify-end space-x-2 h-full">
-          <ComboboxName />
+          <ComboboxName
+            listStaff={listStaff}
+            setSelectedStaff={setSelectedStaff}
+          />
           <Input
             type="month"
-            className="max-w-sm shadow-xl text-base py-6 rounded-md bg-background-color h-ful"
+            className="w-48 shadow-xl text-base py-6 rounded-md bg-background-color h-full"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
-          <Input
-            type="number"
-            step={100}
-            className="max-w-sm shadow-xl text-base py-6 rounded-md bg-background-color h-full"
-            placeholder="Masukan Gaji Per Jam"
-            value={payslip}
-            onChange={(e) => setPayslip(e.target.valueAsNumber)}
-          />
-          <Button className="h-full shadow-xl bg-first-color px-5">
-            Simpan
-          </Button>
+          <div className="h-full w-96 relative flex justify-center items-center">
+            <div className="absolute top-[0.1rem] left-1 bg-background-color w-fit h-[calc(100%-5px)] border-e rounded-md px-2 flex justify-center items-center text-sm text-gray-500">
+              Gaji Per Jam
+            </div>
+            <Input
+              type="number"
+              step={100}
+              className=" w-96 shadow-xl text-base py-6 rounded-md bg-background-color h-full ps-28 pe-24"
+              placeholder="Masukan Gaji Per Jam"
+              value={hourlyPaid}
+              onChange={(e) => setHourlyPaid(e.target.valueAsNumber)}
+            />
+            <Button
+              className="absolute right-2 h-3/4 shadow-xl bg-first-color hover:bg-first-color/90 px-3"
+              onClick={handleUpdateHourlyPaid}
+            >
+              Simpan
+            </Button>
+          </div>
         </div>
       </div>
       <div className="shadow-xl rounded-xl ">

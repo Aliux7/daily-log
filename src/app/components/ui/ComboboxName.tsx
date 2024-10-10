@@ -19,33 +19,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
-  {
-    value: "#asdasdasd",
-    label: "Kelson Edbert Susilo - Surabaya",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+interface ComboboxNameProps {
+  listStaff: { id: string; name: string; branch: string }[];
+  setSelectedStaff: (staff: string) => void;
+}
 
-export function ComboboxName() {
+export function ComboboxName({
+  listStaff,
+  setSelectedStaff,
+}: ComboboxNameProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
+  const selectedStaff = listStaff.find((staff) => staff.id === value);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -55,34 +41,37 @@ export function ComboboxName() {
           aria-expanded={open}
           className="w-full min-w-96 max-w-96 justify-between h-full shadow-xl bg-background-color rounded-md"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+          {selectedStaff
+            ? `${selectedStaff.name} - ${selectedStaff.branch}`
             : "Pilih Karyawan..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full min-w-96  max-w-96 p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Cari karyawan..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Karyawan Tidak Ditemukan.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {listStaff.map((staff) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={staff.id}
+                  value={staff.id}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    setSelectedStaff(
+                      currentValue === value ? "" : currentValue
+                    );
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === staff.id ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {framework.label}
+                  {staff.name} - {staff.branch}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -1,6 +1,8 @@
 export const registerNewCompany = async (
   company: string,
+  emailOwner: string,
   passwordOwner: string,
+  emailAdmin: string,
   passwordAdmin: string,
   phone: string
 ) => {
@@ -12,7 +14,9 @@ export const registerNewCompany = async (
       },
       body: JSON.stringify({
         company,
+        emailOwner,
         passwordOwner,
+        emailAdmin,
         passwordAdmin,
         phone,
       }),

@@ -45,16 +45,16 @@ const Sidebar = () => {
       icon: <RiMoneyDollarCircleFill  color="#383F6B" className="w-3 h-3" />,
       destination: "/gaji",
     },
-    {
-      name: "Catatan",
-      icon: <PiNotepadFill color="#383F6B" className="w-3 h-3" />,
-      destination: "/catatan",
-    },
-    {
-      name: "Log",
-      icon: <SiCountingworkspro color="#383F6B" className="w-3 h-3" />,
-      destination: "log",
-    },
+    // {
+    //   name: "Catatan",
+    //   icon: <PiNotepadFill color="#383F6B" className="w-3 h-3" />,
+    //   destination: "/catatan",
+    // },
+    // {
+    //   name: "Log",
+    //   icon: <SiCountingworkspro color="#383F6B" className="w-3 h-3" />,
+    //   destination: "log",
+    // },
   ]);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const genericHamburgerLine = `h-[0.2rem] my-[0.15rem] rounded-full bg-black transition ease transform duration-300`;

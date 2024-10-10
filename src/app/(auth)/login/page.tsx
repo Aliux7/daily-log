@@ -91,12 +91,12 @@ const page = () => {
                 Daftar Sekarang
               </a>
             </p>
-            <a
-              href="#"
-              className="text-sm font-medium text-first-color hover:underline dark:text-primary-500"
+            <del
+              // href="#"
+              className="text-sm font-medium text-first-color italic"
             >
               Lupa Password?
-            </a>
+            </del>
           </div>
         </form>
       </div>

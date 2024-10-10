@@ -38,7 +38,14 @@ async function createUserCredentialAndStoreData(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { company, passwordOwner, passwordAdmin, phone } = body;
+  const {
+    company,
+    emailOwner,
+    passwordOwner,
+    emailAdmin,
+    passwordAdmin,
+    phone,
+  } = body;
 
   const todayDate = new Date();
   const year = todayDate.getFullYear();
@@ -50,6 +57,7 @@ export async function POST(req: NextRequest) {
     const companyData = {
       name: company,
       phone: phone,
+      hourlyPaid: 8000,
       active: todayDate,
     };
 
@@ -57,13 +65,13 @@ export async function POST(req: NextRequest) {
     await createUserCredentialAndStoreData(
       companyId,
       "Owner",
-      `owner@${company}.com`,
+      emailOwner,
       passwordOwner
     );
     await createUserCredentialAndStoreData(
       companyId,
       "Admin",
-      `admin@${company}.com`,
+      emailAdmin,
       passwordAdmin
     );
 

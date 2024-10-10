@@ -7,21 +7,21 @@
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 5px;
   height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f9fafb;
+  background: #f9fafb00;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: hsla(240, 53%, 49%, 0.336);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b1b1b1;
+  background: hsl(240, 53%, 49%);
 }
 
 @layer base {

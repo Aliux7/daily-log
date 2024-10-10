@@ -9,6 +9,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { useAuth } from "@/app/context/AuthContext";
 import Loading from "@/app/components/ui/Loading/Loading";
+import { BsFillCalendarDateFill } from "react-icons/bs";
+import Link from "next/link";
 
 const page = () => {
   const { userData, businessData, loading } = useAuth();
@@ -17,6 +19,9 @@ const page = () => {
     new Date("2024-09-01"),
     new Date("2024-09-02"),
     new Date("2024-09-03"),
+  ];
+  const looping = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
   ];
 
   if (loading) {
@@ -40,9 +45,12 @@ const page = () => {
             <div>
               <Clock />
             </div>
-            <button className="bg-first-color hover:bg-first-color/90 hover:scale-[1.01] transition-all duration-300 ease-in-out text-gray-50 px-14 py-3 rounded-md">
+            <Link
+              href={"/absensi"}
+              className="bg-first-color hover:bg-first-color/90 hover:scale-[1.01] transition-all duration-300 ease-in-out text-gray-50 px-14 py-3 rounded-md"
+            >
               Absensi
-            </button>
+            </Link>
             <del className="text-first-color/50 my-1 italic">
               Bypass Absensi
             </del>
@@ -52,7 +60,7 @@ const page = () => {
 
           <div className="rounded-xl flex-grow h-[34rem] flex flex-col justify-center items-center gap-10">
             <div className="w-full h-[22rem] flex gap-7">
-              <div className="relative h-full w-full  flex flex-col bg-background-color shadow-xl rounded-xl p-6">
+              {/* <div className="relative h-full w-full  flex flex-col bg-background-color shadow-xl rounded-xl p-6">
                 <div className="text-center font-urbanist font-medium text-gray-500 text-xl border-b border-b-gray-200 pb-4 italic">
                   Catatan
                 </div>
@@ -117,6 +125,23 @@ const page = () => {
                     </div>
                   </div>
                 </div>
+              </div> */}
+
+              <div className="relative bg-background-color shadow-xl w-2/3 rounded-xl p-5 flex flex-col justify-between after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-black/10 after:rounded-xl opacity-50">
+                <h1 className="text-gray-500 text-sm text-end mb-3">
+                  Log Terbaru
+                </h1>
+                <div className="w-full h-full overflow-y-auto px-1 pt-1 text-center flex justify-center items-center">
+                  <h1>On Progress . . .</h1>
+                  {/* {looping.map(() => (
+                    <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
+                      <div>Testing Masuk</div>
+                      <div className="text-gray-500 text-sm italic">
+                        20 Sept 2024 13:00:00
+                      </div>
+                    </div>
+                  ))} */}
+                </div>
               </div>
               <div className="bg-background-color w-80 rounded-xl h-auto flex justify-center items-center shadow-xl">
                 <Calendar
@@ -129,7 +154,7 @@ const page = () => {
               </div>
             </div>
             <div className="w-full h-full flex gap-5">
-              <div className="relative bg-background-color shadow-xl w-1/3 rounded-xl p-5 flex flex-col justify-between">
+              <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
                 <h1 className="text-gray-500 text-lg italic">Total Staff</h1>
                 <h1 className="text-first-color text-6xl font-semibold w-full text-end">
                   27
@@ -138,33 +163,18 @@ const page = () => {
                   <FaUser color="#d1d5db" className="w-11 h-11" />
                 </div>
               </div>
-              <div className="relative bg-background-color shadow-xl w-2/3 rounded-xl p-5 flex flex-col justify-between">
-                <h1 className="text-gray-500 text-sm text-end">Log Terbaru</h1>
-                <div className="w-full h-20 overflow-y-auto">
-                  <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
-                    <div>John Doe Check In</div>
-                    <div className="text-gray-500 text-sm italic">
-                      20 Sept 2024 13:00:00
-                    </div>
-                  </div>
-                  <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
-                    <div>Staff Baru Joni Masuk</div>
-                    <div className="text-gray-500 text-sm italic">
-                      20 Sept 2024 10:00:00
-                    </div>
-                  </div>
-                  <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
-                    <div>John Doe Check In</div>
-                    <div className="text-gray-500 text-sm italic">
-                      20 Sept 2024 09:30:00
-                    </div>
-                  </div>
-                  <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
-                    <div>John Doe Check In</div>
-                    <div className="text-gray-500 text-sm italic">
-                      20 Sept 2024 09:00:00
-                    </div>
-                  </div>
+              <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
+                <h1 className="text-gray-500 text-lg italic text-end">
+                  Hingga 01 Januari 2030
+                </h1>
+                <h1 className="text-first-color text-6xl font-semibold w-full text-end">
+                  Aktif
+                </h1>
+                <div className="absolute bottom-7 left-5">
+                  <BsFillCalendarDateFill
+                    color="#d1d5db"
+                    className="w-11 h-11"
+                  />
                 </div>
               </div>
             </div>

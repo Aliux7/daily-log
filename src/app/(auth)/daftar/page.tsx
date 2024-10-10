@@ -17,10 +17,16 @@ const page = () => {
   const [telepon, setTelepon] = useState("");
   const [errorTelepon, setErrorTelepon] = useState<string | null>(null);
 
+  const [emailOwner, setEmailOwner] = useState("");
+  const [errorEmailOwner, setErrorEmailOwner] = useState<string | null>(null);
+
   const [passwordOwner, setPasswordOwner] = useState("");
   const [errorPasswordOwner, setErrorPasswordOwner] = useState<string | null>(
     null
   );
+
+  const [emailAdmin, setEmailAdmin] = useState("");
+  const [errorEmailAdmin, setErrorEmailAdmin] = useState<string | null>(null);
 
   const [passwordAdmin, setPasswordAdmin] = useState("");
   const [errorPasswordAdmin, setErrorPasswordAdmin] = useState<string | null>(
@@ -44,6 +50,11 @@ const page = () => {
     setTelepon(value);
   };
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
   const handleValidationInput = () => {
     let valid = true;
 
@@ -64,6 +75,13 @@ const page = () => {
       setErrorTelepon("");
     }
 
+    if (!validateEmail(emailOwner)) {
+      setErrorEmailOwner("Harap memasukan format email dengan benar.");
+      valid = false;
+    } else {
+      setErrorEmailOwner(" ");
+    }
+
     if (
       passwordOwner.length < 5 ||
       passwordOwner.toLowerCase() == passwordOwner ||
@@ -73,6 +91,13 @@ const page = () => {
       valid = false;
     } else {
       setErrorPasswordOwner("");
+    }
+
+    if (!validateEmail(emailAdmin)) {
+      setErrorEmailAdmin("Harap memasukan format email dengan benar.");
+      valid = false;
+    } else {
+      setErrorEmailAdmin(" ");
     }
 
     if (
@@ -111,7 +136,9 @@ const page = () => {
 
     const result = await registerNewCompany(
       usaha,
+      emailOwner,
       passwordOwner,
+      emailAdmin,
       passwordAdmin,
       telepon
     );
@@ -198,16 +225,20 @@ const page = () => {
               Email Owner
             </label>
             <input
-              value={usaha ? "owner@" + usaha + ".com" : ""}
+              value={emailOwner}
+              onChange={(e) => setEmailOwner(e.target.value)}
               type="email"
               name="email_owner"
               id="email_owner"
-              readOnly
-              disabled
               className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-first-color focus:border-first-color block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="owner@perusahaan.com"
+              placeholder="example@gmail.com"
               required
             />
+            {errorEmailOwner && (
+              <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                {errorEmailOwner}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -240,16 +271,20 @@ const page = () => {
               Email Admin
             </label>
             <input
-              value={usaha ? "admin@" + usaha + ".com" : ""}
+              value={emailAdmin}
+              onChange={(e) => setEmailAdmin(e.target.value)}
               type="email"
               name="email_admin"
               id="email_admin"
-              readOnly
-              disabled
               className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-first-color focus:border-first-color block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="admin@perusahaan.com"
               required
             />
+            {errorEmailAdmin && (
+              <p className="mt-2 text-xs text-red-600 dark:text-red-500">
+                {errorEmailAdmin}
+              </p>
+            )}
           </div>
           <div>
             <label

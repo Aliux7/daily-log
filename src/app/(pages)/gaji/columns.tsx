@@ -31,14 +31,7 @@ export type Karyawan = {
   role: string;
 };
 
-export const getColumns = (
-  selectedDate: string,
-  fetchDataRekap: () => void,
-  businessData: any,
-  userData: any,
-  setLoading: (value: boolean) => void,
-  payslip: number
-) => {
+export const getColumns = (hourlyPaid: number) => {
   return [
     {
       accessorKey: "date",
@@ -195,26 +188,52 @@ export const getColumns = (
         if (!karyawan.clockIn)
           return <h1 className={`text-center`}>0 jam : 0 menit</h1>;
 
+        let hoursDifference = 0;
+        let minutesDifference = 0;
+
         const convertFirestoreTimestampToDate = (timestamp: Timestamp) => {
           const milliseconds =
             timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
           return new Date(milliseconds);
         };
 
-        const clockInTime = convertFirestoreTimestampToDate(karyawan.clockIn);
-        const clockOutTime = convertFirestoreTimestampToDate(karyawan.clockOut);
+        if (karyawan.clockIn && karyawan.clockOut) {
+          const clockInTime = convertFirestoreTimestampToDate(karyawan.clockIn);
+          const clockOutTime = convertFirestoreTimestampToDate(
+            karyawan.clockOut
+          );
+          const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+          const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+          );
 
-        const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
+          hoursDifference = hoursDifference + hours;
+          minutesDifference = minutesDifference + minutes;
+        }
 
-        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-        const minutes = Math.floor(
-          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-        );
+        if (karyawan.overtimeClockIn && karyawan.overtimeClockOut) {
+          const overtimeClockInTime = convertFirestoreTimestampToDate(
+            karyawan.overtimeClockIn
+          );
+          const overtimeClockOutTime = convertFirestoreTimestampToDate(
+            karyawan.overtimeClockOut
+          );
+          const overtimeDifference =
+            overtimeClockOutTime.getTime() - overtimeClockInTime.getTime();
+          const hours = Math.floor(overtimeDifference / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (overtimeDifference % (1000 * 60 * 60)) / (1000 * 60)
+          );
+
+          hoursDifference = hoursDifference + hours;
+          minutesDifference = minutesDifference + minutes;
+        }
 
         return (
           <div>
             <h1 className={`text-center`}>
-              {hours} jam : {minutes} menit
+              {hoursDifference} jam : {minutesDifference} menit
             </h1>
           </div>
         );
@@ -227,42 +246,19 @@ export const getColumns = (
       },
       cell: ({ row }: any) => {
         const karyawan = row.original;
-        if (
-          !karyawan.clockIn &&
-          !karyawan.clockOut &&
-          !karyawan.overtimeClockIn &&
-          !karyawan.overtimeClockOut
-        )
-          return <h1 className={`text-center`}>Rp. 0,00</h1>;
-
-        const convertFirestoreTimestampToDate = (timestamp: Timestamp) => {
-          const milliseconds =
-            timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000;
-          return new Date(milliseconds);
-        };
-
-        const clockInTime = convertFirestoreTimestampToDate(karyawan.clockIn);
-        const clockOutTime = convertFirestoreTimestampToDate(karyawan.clockOut);
-
-        const timeDifference = clockOutTime.getTime() - clockInTime.getTime();
-
-        const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-        const minutes = Math.floor(
-          (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-        );
-
-        const subtotalPayslip = hours * payslip + (payslip / 60) * minutes;
+        if (karyawan.subtotalAmount == 0)
+          return <h1 className={`text-center`}>Rp. 0</h1>;
 
         const formatToIDR = (amount: number) => {
           return new Intl.NumberFormat("id-ID", {
             style: "currency",
             currency: "IDR",
-            minimumFractionDigits: 0, // Adjust as needed
-            maximumFractionDigits: 0, // Adjust as needed
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
           }).format(amount);
         };
 
-        const formattedSubtotal = formatToIDR(subtotalPayslip);
+        const formattedSubtotal = formatToIDR(karyawan.subtotalAmount);
         return (
           <div>
             <h1 className={`text-center`}>{formattedSubtotal}</h1>

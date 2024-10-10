@@ -7,6 +7,8 @@ import {
   getDocs,
   startAt,
   endAt,
+  doc,
+  getDoc,
 } from "firebase/firestore";
 import dayjs from "dayjs";
 
@@ -57,17 +59,26 @@ export async function GET(req: NextRequest) {
     );
 
     const attendanceDocsSnap = await getDocs(attendanceQuery);
- 
+
     const attendanceDataArray: any[] = [];
     attendanceDocsSnap.forEach((doc) => {
       attendanceDataArray.push({ date: doc.id, ...doc.data() });
     });
+
+    const businessDocRef = doc(firestore, `businesses/${businessId}`);
+    const businessDocSnap = await getDoc(businessDocRef);
+    let hourlyPaidTemp = 8000;
+    if (businessDocSnap.exists()) {
+      const { hourlyPaid } = businessDocSnap.data();
+      hourlyPaidTemp = hourlyPaid;
+    }
 
     return NextResponse.json({
       success: true,
       data: attendanceDataArray,
       start: startOfMonth,
       end: endOfMonth,
+      hourlyPaid: hourlyPaidTemp,
     });
   } catch (error: any) {
     console.error("Error in GET: ", error);
