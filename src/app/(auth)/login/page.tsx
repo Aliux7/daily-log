@@ -19,7 +19,7 @@ const page = () => {
     if (result.success) {
       setError(null);
       Cookies.set("idToken", result.idToken, { expires: 7 });
-      window.location.href = "/dashboard"; //Pakek window buat refresh javascript biar trigger useContext kalau router ngk ke trigger useContext
+      window.location.href = "/dashboard";  
     } else {
       setError(result.message);
       setLoading(false);

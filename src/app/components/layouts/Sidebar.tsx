@@ -11,13 +11,13 @@ import Cookies from "js-cookie";
 import { auth } from "@/lib/firebase/firebaseConfig";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 
-
-
 import { useRouter } from "next/navigation";
 import { RiFileHistoryFill } from "react-icons/ri";
 import { logout } from "@/app/(auth)/login/actions";
+import { useAuth } from "@/app/context/AuthContext";
 
 const Sidebar = () => {
+  const { userData, businessData } = useAuth();
   const router = useRouter();
   const [items, setItems] = useState([
     {
@@ -40,11 +40,17 @@ const Sidebar = () => {
       icon: <FaUser color="#383F6B" className="w-3 h-3" />,
       destination: "/karyawan",
     },
-    {
-      name: "Gaji",
-      icon: <RiMoneyDollarCircleFill  color="#383F6B" className="w-3 h-3" />,
-      destination: "/gaji",
-    },
+    ...(userData?.role === "Owner"
+      ? [
+          {
+            name: "Gaji",
+            icon: (
+              <RiMoneyDollarCircleFill color="#383F6B" className="w-3 h-3" />
+            ),
+            destination: "/gaji",
+          },
+        ]
+      : []),
     // {
     //   name: "Catatan",
     //   icon: <PiNotepadFill color="#383F6B" className="w-3 h-3" />,
