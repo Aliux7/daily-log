@@ -30,6 +30,7 @@ interface BusinessData {
   name: string;
   phone: string;
   active: Timestamp;
+  regional?: [];
 }
 
 interface AuthContextType {

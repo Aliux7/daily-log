@@ -176,124 +176,124 @@ export const getColumns = (
         );
       },
     },
-    {
-      accessorKey: "overtimeClockIn",
-      header: () => {
-        return <h1 className="text-center">Masuk Lembur</h1>;
-      },
+    // {
+    //   accessorKey: "overtimeClockIn",
+    //   header: () => {
+    //     return <h1 className="text-center">Masuk Lembur</h1>;
+    //   },
 
-      cell: ({ row }: any) => {
-        const [showPopUp, setShowPopUp] = useState(false);
-        const karyawan = row.original;
-        let formattedTime = "";
-        let date = undefined;
-        let dd = "";
-        let mm = "";
-        if (karyawan?.attendance?.overtimeClockIn) {
-          const { seconds } = karyawan.attendance.overtimeClockIn;
-          date = new Date(seconds * 1000);
-          dd = format(date, "dd");
-          mm = format(date, "MM");
-          formattedTime = format(date, "HH:mm");
-        }
+    //   cell: ({ row }: any) => {
+    //     const [showPopUp, setShowPopUp] = useState(false);
+    //     const karyawan = row.original;
+    //     let formattedTime = "";
+    //     let date = undefined;
+    //     let dd = "";
+    //     let mm = "";
+    //     if (karyawan?.attendance?.overtimeClockIn) {
+    //       const { seconds } = karyawan.attendance.overtimeClockIn;
+    //       date = new Date(seconds * 1000);
+    //       dd = format(date, "dd");
+    //       mm = format(date, "MM");
+    //       formattedTime = format(date, "HH:mm");
+    //     }
 
-        return (
-          <div>
-            <h1
-              className={`text-center ${
-                userData.role == "Owner"
-                  ? "border rounded-md cursor-pointer"
-                  : ""
-              }`}
-              onClick={() => {
-                userData.role == "Owner" ? setShowPopUp(true) : null;
-              }}
-            >
-              {!karyawan?.attendance?.overtimeClockIn ? (
-                "-- : --"
-              ) : (
-                <div>
-                  <sup className="font-semibold">{dd}</sup>/
-                  <sub className="font-semibold">{mm}</sub> ({formattedTime})
-                </div>
-              )}
-            </h1>
-            {showPopUp && (
-              <PopUpRekap
-                selectedDate={selectedDate}
-                setShowPopUp={setShowPopUp}
-                setLoading={setLoading}
-                selectedStaffId={karyawan.id}
-                selectedStaffName={karyawan.name}
-                selectedStaffBranch={karyawan.branch}
-                businessId={businessData.id}
-                fetchDataRekap={fetchDataRekap}
-                selectedValue={date}
-                selectedLabel="overtimeClockIn"
-              />
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "overtimeClockOut",
-      header: () => {
-        return <h1 className="text-center">Keluar Lembur</h1>;
-      },
-      cell: ({ row }: any) => {
-        const [showPopUp, setShowPopUp] = useState(false);
-        const karyawan = row.original;
-        let formattedTime = "";
-        let date = undefined;
-        let dd = "";
-        let mm = "";
-        if (karyawan?.attendance?.overtimeClockOut) {
-          const { seconds } = karyawan.attendance.overtimeClockOut;
-          date = new Date(seconds * 1000);
-          dd = format(date, "dd");
-          mm = format(date, "MM");
-          formattedTime = format(date, "HH:mm");
-        }
+    //     return (
+    //       <div>
+    //         <h1
+    //           className={`text-center ${
+    //             userData.role == "Owner"
+    //               ? "border rounded-md cursor-pointer"
+    //               : ""
+    //           }`}
+    //           onClick={() => {
+    //             userData.role == "Owner" ? setShowPopUp(true) : null;
+    //           }}
+    //         >
+    //           {!karyawan?.attendance?.overtimeClockIn ? (
+    //             "-- : --"
+    //           ) : (
+    //             <div>
+    //               <sup className="font-semibold">{dd}</sup>/
+    //               <sub className="font-semibold">{mm}</sub> ({formattedTime})
+    //             </div>
+    //           )}
+    //         </h1>
+    //         {showPopUp && (
+    //           <PopUpRekap
+    //             selectedDate={selectedDate}
+    //             setShowPopUp={setShowPopUp}
+    //             setLoading={setLoading}
+    //             selectedStaffId={karyawan.id}
+    //             selectedStaffName={karyawan.name}
+    //             selectedStaffBranch={karyawan.branch}
+    //             businessId={businessData.id}
+    //             fetchDataRekap={fetchDataRekap}
+    //             selectedValue={date}
+    //             selectedLabel="overtimeClockIn"
+    //           />
+    //         )}
+    //       </div>
+    //     );
+    //   },
+    // },
+    // {
+    //   accessorKey: "overtimeClockOut",
+    //   header: () => {
+    //     return <h1 className="text-center">Keluar Lembur</h1>;
+    //   },
+    //   cell: ({ row }: any) => {
+    //     const [showPopUp, setShowPopUp] = useState(false);
+    //     const karyawan = row.original;
+    //     let formattedTime = "";
+    //     let date = undefined;
+    //     let dd = "";
+    //     let mm = "";
+    //     if (karyawan?.attendance?.overtimeClockOut) {
+    //       const { seconds } = karyawan.attendance.overtimeClockOut;
+    //       date = new Date(seconds * 1000);
+    //       dd = format(date, "dd");
+    //       mm = format(date, "MM");
+    //       formattedTime = format(date, "HH:mm");
+    //     }
 
-        return (
-          <div>
-            <h1
-              className={`text-center ${
-                userData.role == "Owner"
-                  ? "border rounded-md cursor-pointer"
-                  : ""
-              }`}
-              onClick={() => {
-                userData.role == "Owner" ? setShowPopUp(true) : null;
-              }}
-            >
-              {!karyawan?.attendance?.overtimeClockOut ? (
-                "-- : --"
-              ) : (
-                <div>
-                  <sup className="font-semibold">{dd}</sup>/
-                  <sub className="font-semibold">{mm}</sub> ({formattedTime})
-                </div>
-              )}
-            </h1>
-            {showPopUp && (
-              <PopUpRekap
-                selectedDate={selectedDate}
-                setShowPopUp={setShowPopUp}
-                setLoading={setLoading}
-                selectedStaffId={karyawan.id}
-                selectedStaffName={karyawan.name}
-                selectedStaffBranch={karyawan.branch}
-                businessId={businessData.id}
-                fetchDataRekap={fetchDataRekap}
-                selectedValue={date}
-                selectedLabel="overtimeClockOut"
-              />
-            )}
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div>
+    //         <h1
+    //           className={`text-center ${
+    //             userData.role == "Owner"
+    //               ? "border rounded-md cursor-pointer"
+    //               : ""
+    //           }`}
+    //           onClick={() => {
+    //             userData.role == "Owner" ? setShowPopUp(true) : null;
+    //           }}
+    //         >
+    //           {!karyawan?.attendance?.overtimeClockOut ? (
+    //             "-- : --"
+    //           ) : (
+    //             <div>
+    //               <sup className="font-semibold">{dd}</sup>/
+    //               <sub className="font-semibold">{mm}</sub> ({formattedTime})
+    //             </div>
+    //           )}
+    //         </h1>
+    //         {showPopUp && (
+    //           <PopUpRekap
+    //             selectedDate={selectedDate}
+    //             setShowPopUp={setShowPopUp}
+    //             setLoading={setLoading}
+    //             selectedStaffId={karyawan.id}
+    //             selectedStaffName={karyawan.name}
+    //             selectedStaffBranch={karyawan.branch}
+    //             businessId={businessData.id}
+    //             fetchDataRekap={fetchDataRekap}
+    //             selectedValue={date}
+    //             selectedLabel="overtimeClockOut"
+    //           />
+    //         )}
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 };

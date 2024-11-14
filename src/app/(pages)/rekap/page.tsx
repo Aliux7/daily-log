@@ -15,7 +15,7 @@ const formatDateToString = (date: Date | undefined): string => {
 };
 
 const page = () => {
-  const { userData, businessData } = useAuth(); 
+  const { userData, businessData } = useAuth();
   const [data, setdata] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -54,6 +54,8 @@ const page = () => {
             setLoading
           )}
           data={data}
+          businessId={businessData?.id}
+          role={userData?.role}
         />
       </div>
       {loading && <Loading />}

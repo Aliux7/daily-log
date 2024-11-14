@@ -58,3 +58,42 @@ export const clockOut = async (businessId: string, staffId: string) => {
     console.error("API call failed:", error.message);
   }
 };
+
+export const addCategory = async (businessId: string, value: string) => {
+  try {
+    const responeAddCategory = await fetch("/api/categories/regional", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ businessId, value }),
+    });
+
+    const resultAddCategory = await responeAddCategory.json();
+
+    if (resultAddCategory.success) {
+      return { success: true, message: "Add Successful" };
+    } else {
+      return { success: false, message: resultAddCategory.message };
+    }
+  } catch (error: any) {
+    console.error("API call failed:", error.message);
+  }
+};
+
+export const getAllCategories = async (businessId: string) => {
+  try {
+    const responeCategories = await fetch(
+      `/api/categories/regional?businessId=${businessId}`
+    );
+
+    const resultCategories = await responeCategories.json(); 
+    if (resultCategories.success) {
+      return { success: true, data: resultCategories.businessData.regional };
+    } else {
+      return { success: false, message: resultCategories.message };
+    }
+  } catch (error: any) {
+    console.error("API call failed:", error.message);
+  }
+};

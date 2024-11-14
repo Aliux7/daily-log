@@ -26,7 +26,7 @@ const page = () => {
   };
 
   useEffect(() => {
-    fetchDataAbsensi();
+    fetchDataAbsensi(); 
   }, [businessData]);
 
   return (
@@ -56,6 +56,8 @@ const page = () => {
         <DataTable
           columns={getColumns(fetchDataAbsensi, setLoading)}
           data={data}
+          businessId={businessData?.id} 
+          role={userData?.role}
         />
       </div>
       {loadingFetch && <Loading />}

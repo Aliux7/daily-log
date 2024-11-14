@@ -34,11 +34,9 @@ export const getColumns = (
 ) => {
   return [
     {
-      accessorKey: "id",
-      header: "ID",
-      cell: ({ row }: any) => {
-        const karyawan = row.original;
-        return <h1 className="text-first-color">#{karyawan.id}</h1>;
+      header: "No.",
+      cell: ({ row }: any) => { 
+        return <h1 className="text-first-color">{row.index + 1}.</h1>;
       },
     },
     {
@@ -81,7 +79,7 @@ export const getColumns = (
                 <img
                   src={karyawan.profileUrl}
                   className="max-h-[90vh] max-w-[90vw] h-auto w-auto"
-                /> 
+                />
               </div>
             )}
             <h1

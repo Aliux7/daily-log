@@ -137,7 +137,7 @@ export const getColumns = (
               onClick={() => setShowCamera(true)}
               className="text-first-color bg-blue-100 px-2 py-1 rounded-xl w-fit cursor-pointer"
             >
-              Buka Pemindaian Wajah
+              Kamera
             </div>
             {showCamera && (
               <div
