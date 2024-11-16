@@ -58,9 +58,15 @@ const page = () => {
 
           <div className="w-px h-[34rem] bg-gray-300"></div>
 
-          <div className="rounded-xl flex-grow h-[34rem] flex flex-col justify-center items-center gap-10">
-            <div className="w-full h-[22rem] flex gap-7">
-              {/* <div className="relative h-full w-full  flex flex-col bg-background-color shadow-xl rounded-xl p-6">
+          {businessData?.id == "wash24laundry-20241017" ? (
+            <img
+              src="/assets/Schedule.jpg"
+              className="flex-grow h-[34rem] rounded-xl shadow-xl"
+            />
+          ) : (
+            <div className="rounded-xl flex-grow h-[34rem] flex flex-col justify-center items-center gap-10">
+              <div className="w-full h-[22rem] flex gap-7">
+                {/* <div className="relative h-full w-full  flex flex-col bg-background-color shadow-xl rounded-xl p-6">
                 <div className="text-center font-urbanist font-medium text-gray-500 text-xl border-b border-b-gray-200 pb-4 italic">
                   Catatan
                 </div>
@@ -127,13 +133,13 @@ const page = () => {
                 </div>
               </div> */}
 
-              <div className="relative bg-background-color shadow-xl w-2/3 rounded-xl p-5 flex flex-col justify-between after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-black/10 after:rounded-xl opacity-50">
-                <h1 className="text-gray-500 text-sm text-end mb-3">
-                  Log Terbaru
-                </h1>
-                <div className="w-full h-full overflow-y-auto px-1 pt-1 text-center flex justify-center items-center">
-                  <h1>On Progress . . .</h1>
-                  {/* {looping.map(() => (
+                <div className="relative bg-background-color shadow-xl w-2/3 rounded-xl p-5 flex flex-col justify-between after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-black/10 after:rounded-xl opacity-50">
+                  <h1 className="text-gray-500 text-sm text-end mb-3">
+                    Log Terbaru
+                  </h1>
+                  <div className="w-full h-full overflow-y-auto px-1 pt-1 text-center flex justify-center items-center">
+                    <h1>On Progress . . .</h1>
+                    {/* {looping.map(() => (
                     <div className="w-full flex justify-between items-center border-b-1 text-gray-700">
                       <div>Testing Masuk</div>
                       <div className="text-gray-500 text-sm italic">
@@ -141,44 +147,45 @@ const page = () => {
                       </div>
                     </div>
                   ))} */}
+                  </div>
                 </div>
-              </div>
-              <div className="bg-background-color w-80 rounded-xl h-auto flex justify-center items-center shadow-xl">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  markedDates={markedDates}
-                  className="rounded-md"
-                />
-              </div>
-            </div>
-            <div className="w-full h-full flex gap-5">
-              <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
-                <h1 className="text-gray-500 text-lg italic">Total Staff</h1>
-                <h1 className="text-first-color text-6xl font-semibold w-full text-end">
-                  27
-                </h1>
-                <div className="absolute bottom-7 left-5">
-                  <FaUser color="#d1d5db" className="w-11 h-11" />
-                </div>
-              </div>
-              <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
-                <h1 className="text-gray-500 text-lg italic text-end">
-                  Hingga 01 Januari 2030
-                </h1>
-                <h1 className="text-first-color text-6xl font-semibold w-full text-end">
-                  Aktif
-                </h1>
-                <div className="absolute bottom-7 left-5">
-                  <BsFillCalendarDateFill
-                    color="#d1d5db"
-                    className="w-11 h-11"
+                <div className="bg-background-color w-80 rounded-xl h-auto flex justify-center items-center shadow-xl">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    markedDates={markedDates}
+                    className="rounded-md"
                   />
                 </div>
               </div>
+              <div className="w-full h-full flex gap-5">
+                <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
+                  <h1 className="text-gray-500 text-lg italic">Total Staff</h1>
+                  <h1 className="text-first-color text-6xl font-semibold w-full text-end">
+                    27
+                  </h1>
+                  <div className="absolute bottom-7 left-5">
+                    <FaUser color="#d1d5db" className="w-11 h-11" />
+                  </div>
+                </div>
+                <div className="relative bg-background-color shadow-xl w-1/2 rounded-xl p-5 flex flex-col justify-between">
+                  <h1 className="text-gray-500 text-lg italic text-end">
+                    Hingga 01 Januari 2030
+                  </h1>
+                  <h1 className="text-first-color text-6xl font-semibold w-full text-end">
+                    Aktif
+                  </h1>
+                  <div className="absolute bottom-7 left-5">
+                    <BsFillCalendarDateFill
+                      color="#d1d5db"
+                      className="w-11 h-11"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -19,7 +19,8 @@ const page = () => {
   const { userData, businessData } = useAuth();
   const [data, setdata] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 7));
+  const [date, setDate] = useState(format(new Date(), "yyyy-MM"));
+
   const [hourlyPaid, setHourlyPaid] = useState(0);
   const [listStaff, setListStaff] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState("");
@@ -51,17 +52,18 @@ const page = () => {
     return timeDifference / (1000 * 60 * 60); // Convert to hours
   };
 
-  const calculateOvertimeHours = (attendanceRecord: any) => {
-    const overtimeClockInTime = convertFirestoreTimestampToDate(
-      attendanceRecord.overtimeClockIn
-    );
-    const overtimeClockOutTime = convertFirestoreTimestampToDate(
-      attendanceRecord.overtimeClockOut
-    );
-    const overtimeDifference =
-      overtimeClockOutTime.getTime() - overtimeClockInTime.getTime();
-    return overtimeDifference / (1000 * 60 * 60); // Convert to hours
-  };
+  // Kalau ada Overtime
+  // const calculateOvertimeHours = (attendanceRecord: any) => {
+  //   const overtimeClockInTime = convertFirestoreTimestampToDate(
+  //     attendanceRecord.overtimeClockIn
+  //   );
+  //   const overtimeClockOutTime = convertFirestoreTimestampToDate(
+  //     attendanceRecord.overtimeClockOut
+  //   );
+  //   const overtimeDifference =
+  //     overtimeClockOutTime.getTime() - overtimeClockInTime.getTime();
+  //   return overtimeDifference / (1000 * 60 * 60); // Convert to hours
+  // };
 
   const fetchDataRekap = async () => {
     if (businessData && userData) {
@@ -89,19 +91,22 @@ const page = () => {
           );
 
           let subtotal = 0;
+          let workingHours = 0;
 
           if (attendanceRecord?.clockIn && attendanceRecord?.clockOut) {
-            const workingHours = calculateWorkingHours(attendanceRecord);
+            workingHours = calculateWorkingHours(attendanceRecord);
             subtotal = workingHours * hourlyPaid;
           }
 
-          if (
-            attendanceRecord?.overtimeClockIn &&
-            attendanceRecord?.overtimeClockOut
-          ) {
-            const overtimeHours = calculateOvertimeHours(attendanceRecord);
-            subtotal += overtimeHours * hourlyPaid;
-          }
+          // Kalau ada Overtime
+          // if (
+          //   attendanceRecord?.overtimeClockIn &&
+          //   attendanceRecord?.overtimeClockOut
+          // ) {
+          //   const overtimeHours = calculateOvertimeHours(attendanceRecord);
+          // workingHours = workingHours + overtimeHours;
+          //   subtotal += overtimeHours * hourlyPaid;
+          // }
 
           totalPayslip += subtotal;
 
@@ -112,12 +117,14 @@ const page = () => {
             date,
             clockIn: attendanceRecord ? attendanceRecord.clockIn : null,
             clockOut: attendanceRecord ? attendanceRecord.clockOut : null,
-            overtimeClockIn: attendanceRecord
-              ? attendanceRecord.overtimeClockIn
-              : null,
-            overtimeClockOut: attendanceRecord
-              ? attendanceRecord.overtimeClockOut
-              : null,
+            workingHours: workingHours,
+            // Kalau ada Overtime
+            // overtimeClockIn: attendanceRecord
+            //   ? attendanceRecord.overtimeClockIn
+            //   : null,
+            // overtimeClockOut: attendanceRecord
+            //   ? attendanceRecord.overtimeClockOut
+            //   : null,
             subtotalAmount: subtotal,
           };
         });
@@ -125,6 +132,7 @@ const page = () => {
         setPayslip(totalPayslip);
         setHourlyPaid(hourlyPaid);
         setdata(tempData);
+        console.log(tempData);
       }
       console.log(result);
     }
@@ -137,6 +145,7 @@ const page = () => {
       if (result?.success) {
         const { data } = result;
         setListStaff(data);
+        console.log(data);
       }
       fetchDataRekap();
     }
@@ -171,6 +180,7 @@ const page = () => {
           setHourlyPaid={setHourlyPaid}
           handleUpdateHourlyPaid={handleUpdate}
           listStaff={listStaff}
+          selectedStaff={selectedStaff}
           setSelectedStaff={setSelectedStaff}
           columns={getColumns(hourlyPaid)}
           data={data}
