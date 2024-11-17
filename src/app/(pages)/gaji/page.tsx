@@ -72,6 +72,7 @@ const page = () => {
         selectedStaff,
         date
       );
+
       if (result?.success) {
         const { start, end, dataAttendance, hourlyPaid } = result;
 
@@ -145,7 +146,6 @@ const page = () => {
       if (result?.success) {
         const { data } = result;
         setListStaff(data);
-        console.log(data);
       }
       fetchDataRekap();
     }
@@ -184,6 +184,7 @@ const page = () => {
           setSelectedStaff={setSelectedStaff}
           columns={getColumns(hourlyPaid)}
           data={data}
+          businessId={businessData?.id}
         />
         <div className="flex justify-end items-center pr-5">
           <h1 className="text-xl font-semibold">

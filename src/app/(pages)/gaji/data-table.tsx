@@ -21,24 +21,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
-
 import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/app/components/ui/DatePicker";
 import { ComboboxName } from "@/app/components/ui/ComboboxName";
-import { exportExcel } from "@/lib/excelUtils";
+import { exportExcel, exportExcelAll } from "@/lib/excelUtils";
 import { Karyawan } from "./columns";
 
 interface DataTableProps<TData, TValue> {
@@ -52,6 +40,7 @@ interface DataTableProps<TData, TValue> {
   listStaff: any;
   selectedStaff: string;
   setSelectedStaff: (value: string) => void;
+  businessId?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -65,6 +54,7 @@ export function DataTable<TData, TValue>({
   listStaff,
   selectedStaff,
   setSelectedStaff,
+  businessId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -124,11 +114,19 @@ export function DataTable<TData, TValue>({
             selectedStaff == "" ? "bg-gray-500" : "bg-green-600"
           } text-white py-2 px-5 rounded-md shadow-xl`}
           disabled={selectedStaff == ""}
-          onClick={() => exportExcel(listStaff.find((staff: Karyawan) => staff.id === selectedStaff), data)}
+          onClick={() =>
+            exportExcel(
+              listStaff.find((staff: Karyawan) => staff.id === selectedStaff),
+              data
+            )
+          }
         >
           Export Seorang
         </button>
-        <button className="bg-purple-600 text-white py-2 px-5 rounded-md shadow-xl">
+        <button
+          className="bg-purple-600 text-white py-2 px-5 rounded-md shadow-xl"
+          onClick={() => exportExcelAll(businessId ? businessId : "", date)}
+        >
           Export Semua
         </button>
       </div>
