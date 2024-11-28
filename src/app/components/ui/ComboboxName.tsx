@@ -53,7 +53,7 @@ export function ComboboxName({
           <CommandList>
             <CommandEmpty>Karyawan Tidak Ditemukan.</CommandEmpty>
             <CommandGroup>
-              {listStaff.map((staff) => (
+              {listStaff?.map((staff) => (
                 <CommandItem
                   key={staff.id}
                   value={staff.id}

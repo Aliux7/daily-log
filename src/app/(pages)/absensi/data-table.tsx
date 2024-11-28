@@ -154,7 +154,7 @@ export function DataTable<TData, TValue>({
               Semua
             </div>
           </li>
-          {allRegionals.map((region) => (
+          {allRegionals?.map((region) => (
             <li onClick={() => handleRegionFilter(region)}>
               <div
                 className={`text-sm p-1 rounded-sm h-full text-gray-500 hover:text-black cursor-pointer ${
@@ -186,9 +186,9 @@ export function DataTable<TData, TValue>({
       <div className="shadow-xl rounded-xl">
         <Table className="bg-background-color rounded-xl">
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups()?.map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers?.map((header) => {
                   return (
                     <TableHead key={header.id} className="text-left">
                       {header.isPlaceholder
@@ -205,12 +205,12 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows?.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells()?.map((cell) => (
                     <TableCell key={cell.id} className="text-left">
                       {flexRender(
                         cell.column.columnDef.cell,

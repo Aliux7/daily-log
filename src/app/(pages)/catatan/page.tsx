@@ -82,7 +82,7 @@ const page = () => {
         <h1 className="text-3xl font-urbanist font-semibold mb-2 px-5">Catatan</h1>
 
         <div className="w-full h-fit grid grid-cols-4 gap-7 overflow-y-auto pb-10 px-5">
-          {catatans.map((catatan, index) => (
+          {catatans?.map((catatan, index) => (
             <div
               className={`${
                 color[index % 6]

@@ -32,7 +32,7 @@ export const exportExcel = (selectedStaff: Karyawan, staffData: any[]) => {
     (sum, row) => sum + row.subtotalAmount,
     0
   );
-  const dataToExport = staffData.map((row) => ({
+  const dataToExport = staffData?.map((row) => ({
     Tanggal: row.date,
     "Jam Masuk": row.clockIn
       ? format(new Date(row.clockIn.seconds * 1000), "dd MMM yyyy, HH:mm")
@@ -138,7 +138,7 @@ const fetchDataRekap = async (
 
       let totalPayslip = 0;
 
-      const tempData = allDates.map((date) => {
+      const tempData = allDates?.map((date) => {
         const attendanceRecord = dataAttendance.find(
           (record: { date: string }) => record.date == date
         );
@@ -217,7 +217,7 @@ export const exportExcelAll = async (businessId: string, date: string) => {
   staffDataArray.forEach((staffData: any) => {
     const { staff, data, totalAmount } = staffData;
 
-    const dataToExport = data.map((row: any) => ({
+    const dataToExport = data?.map((row: any) => ({
       Tanggal: row.date,
       "Jam Masuk": row.clockIn
         ? format(new Date(row.clockIn.seconds * 1000), "dd MMM yyyy, HH:mm")

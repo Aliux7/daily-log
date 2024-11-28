@@ -86,7 +86,7 @@ const page = () => {
 
         let totalPayslip = 0;
 
-        const tempData = allDates.map((date) => {
+        const tempData = allDates?.map((date) => {
           const attendanceRecord = dataAttendance.find(
             (record: { date: string }) => record.date == date
           );

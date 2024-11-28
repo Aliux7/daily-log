@@ -120,7 +120,7 @@ const Sidebar = () => {
             </strong>
           </div>
           <ul className="my-5 font-sans h-full relative">
-            {items.map((item, index) => (
+            {items?.map((item, index) => (
               <li key={index}>
                 <Link href={item.destination}>
                   <div className="flex justify-start items-center gap-3 px-2.5 py-2 rounded-xl cursor-pointer hover:bg-gray-100">

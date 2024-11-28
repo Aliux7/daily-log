@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     const staffsRef = collection(firestore, `businesses/${businessId}/staffs`);
     const staffsSnapshot = await getDocs(staffsRef);
 
-    const staffs = staffsSnapshot.docs.map((doc) => ({
+    const staffs = staffsSnapshot.docs?.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
