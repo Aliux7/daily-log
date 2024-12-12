@@ -25,11 +25,11 @@ const Sidebar = () => {
       icon: <MdSpaceDashboard color="#383F6B" className="w-3 h-3" />,
       destination: "/dashboard",
     },
-    {
-      name: "Absensi",
-      icon: <FaClock color="#383F6B" className="w-3 h-3" />,
-      destination: "/absensi",
-    },
+    // {
+    //   name: "Absensi",
+    //   icon: <FaClock color="#383F6B" className="w-3 h-3" />,
+    //   destination: "/absensi",
+    // },
     {
       name: "Rekap",
       icon: <RiFileHistoryFill color="#383F6B" className="w-3 h-3" />,
